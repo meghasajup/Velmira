@@ -3,6 +3,7 @@ import BannerHome from '../components/BannerHome'
 import CatagoriesHome from '../components/CatagoriesHome'
 import ComingSoonPage from '../components/ComingSoonPage'
 import FashionPage from '../components/FashionPage'
+import Tesmonial from '../components/Tesmonial'
 
 const Home = () => {
   return (
@@ -11,6 +12,7 @@ const Home = () => {
       <CatagoriesHome />
       <ComingSoonPage />
       <FashionPage />
+      <Tesmonial />
     </div>
   )
 }
