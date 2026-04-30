@@ -4,6 +4,7 @@ import CatagoriesHome from '../components/CatagoriesHome'
 import ComingSoonPage from '../components/ComingSoonPage'
 import FashionPage from '../components/FashionPage'
 import Tesmonial from '../components/Tesmonial'
+import Footer from '../components/Footer'
 
 const Home = () => {
   return (
@@ -13,6 +14,7 @@ const Home = () => {
       <ComingSoonPage />
       <FashionPage />
       <Tesmonial />
+      <Footer />
     </div>
   )
 }
