@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ToastContainer, toast } from "react-toastify";
 import { Eye, EyeOff, User, Lock, ArrowLeft } from "lucide-react";
@@ -10,8 +10,13 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const [focused, setFocused] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+
+  const validateEmail = (email) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -21,28 +26,37 @@ const LoginPage = () => {
       return;
     }
 
-    const fakeToken = btoa(`${email}:${Date.now()}`);
-    localStorage.setItem("authToken", fakeToken);
+    if (!validateEmail(email)) {
+      toast.error("Invalid email format");
+      return;
+    }
 
-    toast.success("Login success 🚀");
+    setLoading(true);
 
-    setTimeout(() => navigate("/"), 1000);
+    // Simulate API call
+    setTimeout(() => {
+      const fakeToken = btoa(`${email}:${Date.now()}`);
+      localStorage.setItem("authToken", fakeToken);
+
+      toast.success("Login success 🚀");
+      setLoading(false);
+      navigate("/");
+    }, 1200);
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-black to-gray-800 relative overflow-hidden">
 
-      {/* Animated Background Glow */}
-      <div className="absolute w-[500px] h-[500px] bg-purple-500 opacity-20 blur-3xl rounded-full top-[-100px] left-[-100px] animate-pulse"></div>
-      <div className="absolute w-[400px] h-[400px] bg-pink-500 opacity-20 blur-3xl rounded-full bottom-[-100px] right-[-100px] animate-pulse"></div>
+      {/* Glow */}
+      <div className="absolute w-[500px] h-[500px] bg-purple-500 opacity-20 blur-3xl rounded-full top-[-100px] left-[-100px]" />
+      <div className="absolute w-[400px] h-[400px] bg-pink-500 opacity-20 blur-3xl rounded-full bottom-[-100px] right-[-100px]" />
 
       <ToastContainer />
 
-      {/* Card */}
       <motion.div
         initial={{ opacity: 0, scale: 0.9, y: 40 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+        transition={{ duration: 0.4 }}
         className="backdrop-blur-xl bg-white/10 border border-white/20 rounded-3xl shadow-2xl p-8 w-[350px]"
       >
         {/* Back */}
@@ -55,7 +69,7 @@ const LoginPage = () => {
         </button>
 
         {/* Title */}
-        <h2 className="text-3xl font-semibold text-white mb-2 text-center">
+        <h2 className="text-3xl font-semibold text-white text-center">
           Welcome Back
         </h2>
         <p className="text-gray-400 text-center mb-6">
@@ -120,14 +134,42 @@ const LoginPage = () => {
             </button>
           </div>
 
+          {/* Forgot Password */}
+          <div className="text-right text-sm">
+            <Link
+              to="/forgot-password"
+              className="text-gray-400 hover:text-purple-400"
+            >
+              Forgot password?
+            </Link>
+          </div>
+
           {/* Submit */}
           <motion.button
-            whileTap={{ scale: 0.95 }}
-            whileHover={{ scale: 1.03 }}
-            className="w-full py-3 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold shadow-lg"
+            type="submit"
+            disabled={loading}
+            whileTap={{ scale: loading ? 1 : 0.95 }}
+            whileHover={{ scale: loading ? 1 : 1.03 }}
+            className={`w-full py-3 rounded-xl font-semibold shadow-lg transition ${
+              loading
+                ? "bg-gray-600 cursor-not-allowed"
+                : "bg-gradient-to-r from-purple-500 to-pink-500 text-white"
+            }`}
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </motion.button>
+
+          {/* Sign Up */}
+          <p className="text-center text-gray-400 text-sm mt-2">
+            Don’t have an account?{" "}
+            <Link
+              to="/signup"
+              className="text-purple-400 hover:text-purple-300 font-medium"
+            >
+              Sign Up
+            </Link>
+          </p>
+
         </form>
       </motion.div>
     </div>
