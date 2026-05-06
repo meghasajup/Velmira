@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Truck, Shield, Heart } from "lucide-react";
 import { watchOfferBannerStyles } from '../assets/dummyStyles'
 import F1 from "../assets/F1.png"
+import { motion } from "framer-motion";
 
 const FashionPage = () => {
 
@@ -27,12 +28,12 @@ const FashionPage = () => {
 
                 const nextTotal = total - 1;
 
-                const Days = Math.floor(nextTotal / 86400);
-                const Hours = Math.floor((nextTotal % 86400) / 3600);
-                const Minutes = Math.floor((nextTotal % 3600) / 60);
-                const Seconds = Math.floor(nextTotal % 60);
-
-                return { Days, Hours, Minutes, Seconds };
+                return {
+                    Days: Math.floor(nextTotal / 86400),
+                    Hours: Math.floor((nextTotal % 86400) / 3600),
+                    Minutes: Math.floor((nextTotal % 3600) / 60),
+                    Seconds: Math.floor(nextTotal % 60),
+                };
             });
         }, 1000);
 
@@ -43,22 +44,20 @@ const FashionPage = () => {
         <div className={watchOfferBannerStyles.container}>
             <div className={watchOfferBannerStyles.maxWidthContainer}>
                 <div className={watchOfferBannerStyles.banner}>
-                    <div className={watchOfferBannerStyles.contentSection}>
 
-                        <div className={watchOfferBannerStyles.decorativeLarge}></div>
-                        <div className={watchOfferBannerStyles.decorativeSmall}></div>
+                    {/* LEFT SECTION */}
+                    <motion.div 
+                        className={watchOfferBannerStyles.contentSection}
+                        initial={{ opacity: 0, x: -60 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.8 }}
+                    >
 
-                        <div
-                            className={watchOfferBannerStyles.offerTag}
-                            style={watchOfferBannerStyles.playfairFont}
-                        >
+                        <div className={watchOfferBannerStyles.offerTag}>
                             Limited Time Offer
                         </div>
 
-                        <h1
-                            className={watchOfferBannerStyles.heading}
-                            style={watchOfferBannerStyles.playfairFont}
-                        >
+                        <h1 className={watchOfferBannerStyles.heading}>
                             Premium{" "}
                             <span className={watchOfferBannerStyles.headingAccent}>
                                 Luxury Watches
@@ -67,76 +66,79 @@ const FashionPage = () => {
                         </h1>
 
                         <p className={watchOfferBannerStyles.description}>
-                            Discover our exclusive selection of premium timepieces with
-                            special discounts upto 30% off. Elevate your style with precision
-                            craftsmanship.
+                            Discover premium timepieces with up to 30% off.
                         </p>
 
-                        {/* Countdown */}
+                        {/* COUNTDOWN */}
                         <div className={watchOfferBannerStyles.countdownGrid}>
                             {Object.entries(timeLeft).map(([unit, value]) => (
-                                <div
+                                <motion.div
                                     key={unit}
                                     className={watchOfferBannerStyles.countdownItem}
+                                    animate={{ scale: [1, 1.1, 1] }}
+                                    transition={{ duration: 0.6 }}
                                 >
                                     <div className={watchOfferBannerStyles.countdownValue}>
                                         {String(value).padStart(2, "0")}
                                     </div>
-
                                     <div className={watchOfferBannerStyles.countdownLabel}>
                                         {unit}
                                     </div>
-                                </div>
+                                </motion.div>
                             ))}
                         </div>
 
-                        {/* Features */}
+                        {/* FEATURES */}
                         <div className={watchOfferBannerStyles.featuresContainer}>
-
-                            <div className={watchOfferBannerStyles.featureItem}>
-                                <Truck
-                                    size={18}
-                                    className={watchOfferBannerStyles.featureIcon}
-                                />
-                                <span className={watchOfferBannerStyles.featureText}>
-                                    Free Shipping
-                                </span>
-                            </div>
-
-                            <div className={watchOfferBannerStyles.featureItem}>
-                                <Shield
-                                    size={18}
-                                    className={watchOfferBannerStyles.featureIcon}
-                                />
-                                <span className={watchOfferBannerStyles.featureText}>
-                                    2-Year Warranty
-                                </span>
-                            </div>
-
-                            <div className={watchOfferBannerStyles.featureItem}>
-                                <Heart
-                                    size={18}
-                                    className={watchOfferBannerStyles.featureIcon}
-                                />
-                                <span className={watchOfferBannerStyles.featureText}>
-                                    7 Days Return
-                                </span>
-                            </div>
-
+                            {[ 
+                                { icon: Truck, text: "Free Shipping" },
+                                { icon: Shield, text: "2-Year Warranty" },
+                                { icon: Heart, text: "7 Days Return" }
+                            ].map((item, i) => (
+                                <motion.div 
+                                    key={i}
+                                    className={watchOfferBannerStyles.featureItem}
+                                    whileHover={{ scale: 1.1, y: -5 }}
+                                >
+                                    <item.icon size={18} />
+                                    <span>{item.text}</span>
+                                </motion.div>
+                            ))}
                         </div>
-                    </div>
 
-                    {/* Image Section */}
-                    <div className={watchOfferBannerStyles.imageSection}>
-                        <div className={watchOfferBannerStyles.imageOverlay}/>
-                        <img src={F1} alt="img" className={watchOfferBannerStyles.image} />
+                    </motion.div>
 
-                        <div className={watchOfferBannerStyles.priceTag}>
-                            <div className={watchOfferBannerStyles.oldPrice}>₹899.99</div>
-                            <div className={watchOfferBannerStyles.newPrice}>₹629.99</div>
-                            <div className={watchOfferBannerStyles.oldPrice}>Save 30%</div>
-                        </div>
-                    </div>
+                    {/* RIGHT IMAGE */}
+                    <motion.div 
+                        className={watchOfferBannerStyles.imageSection}
+                        initial={{ opacity: 0, x: 60 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.8 }}
+                    >
+
+                        {/* FLOATING IMAGE */}
+                        <motion.img 
+                            src={F1} 
+                            alt="watch"
+                            className={watchOfferBannerStyles.image}
+                            animate={{ y: [0, -15, 0] }}
+                            transition={{ duration: 4, repeat: Infinity }}
+                        />
+
+                        {/* PRICE TAG */}
+                        <motion.div 
+                            className={watchOfferBannerStyles.priceTag}
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            transition={{ delay: 0.5 }}
+                            whileHover={{ scale: 1.1 }}
+                        >
+                            <div className={watchOfferBannerStyles.oldPrice}>₹899</div>
+                            <div className={watchOfferBannerStyles.newPrice}>₹629</div>
+                            <div>Save 30%</div>
+                        </motion.div>
+
+                    </motion.div>
 
                 </div>
             </div>
@@ -144,4 +146,4 @@ const FashionPage = () => {
     )
 }
 
-export default FashionPage
+export default FashionPage;
