@@ -60,9 +60,7 @@ const Navbar = () => {
         try {
             localStorage.removeItem("isLoggedIn");
             localStorage.removeItem("authToken");
-        } catch (e) {
-            console.error(e)
-        }
+        } catch (e) {}
         setLoggedIn(false);
         setOpen(false);
         navigate("/")
