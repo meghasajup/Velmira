@@ -228,7 +228,7 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* 🔥 Animations */}
+      {/* Animations */}
       <style>
         {`
         .fade-up {
