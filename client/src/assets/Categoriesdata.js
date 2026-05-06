@@ -105,7 +105,7 @@ const watchesData = {
     
   ],
 
-  "patek-philippe": [
+  "Patek-Philippe": [
     { id: 17, name: "Nautilus 5711", image: P1, price: "₹120,000", desc: "Iconic luxury sports watch.", link: "/brands/patek-philippe/watches/3001" },
     { id: 18, name: "Aquanaut 5167", image: P2, price: "₹30,000", desc: "Sporty modern Patek piece.", link: "/brands/patek-philippe/watches/3002" },
     { id: 19, name: "Complications Annual Calendar", image: P3, price: "₹48,000", desc: "Refined calendar complication.", link: "/brands/patek-philippe/watches/3003" },
