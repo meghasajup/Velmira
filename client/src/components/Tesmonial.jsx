@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import { motion } from "framer-motion";
 import { testimonialPageStyles } from "../assets/dummyStyles";
 
 import T1 from "../assets/T1.png";
@@ -67,10 +68,11 @@ const Testimonial = () => {
 
     stopMomentum();
 
-    const friction = 0.95;
+    const friction = 0.92;
+    const minVelocity = 0.2;
 
     const animate = () => {
-      if (Math.abs(velocity.current) < 0.3) {
+      if (Math.abs(velocity.current) < minVelocity) {
         stopMomentum();
         return;
       }
@@ -108,8 +110,8 @@ const Testimonial = () => {
     if (!el) return;
 
     stopMomentum();
-
     isDown.current = true;
+
     el.classList.add("cursor-grabbing");
 
     startX.current = e.pageX - el.offsetLeft;
@@ -135,7 +137,7 @@ const Testimonial = () => {
     const dx = e.pageX - lastX.current;
     const dt = now - lastTime.current || 1;
 
-    velocity.current = (dx / dt) * 15;
+    velocity.current = (dx / dt) * 12;
 
     lastX.current = e.pageX;
     lastTime.current = now;
@@ -146,7 +148,6 @@ const Testimonial = () => {
     if (!el) return;
 
     stopMomentum();
-
     isDown.current = true;
 
     startX.current = e.touches[0].pageX - el.offsetLeft;
@@ -170,7 +171,7 @@ const Testimonial = () => {
     const dx = e.touches[0].pageX - lastX.current;
     const dt = now - lastTime.current || 1;
 
-    velocity.current = (dx / dt) * 15;
+    velocity.current = (dx / dt) * 12;
 
     lastX.current = e.touches[0].pageX;
     lastTime.current = now;
@@ -179,12 +180,15 @@ const Testimonial = () => {
   return (
     <section className={testimonialPageStyles.pageSection}>
       <div className={testimonialPageStyles.container}>
-        <h2
+        <motion.h2
           className={testimonialPageStyles.title}
           style={{ fontFamily: "'Playfair Display', serif" }}
+          initial={{ opacity: 0, y: 40 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
         >
           THE WATCH JOURNAL
-        </h2>
+        </motion.h2>
 
         <div
           ref={scroller}
@@ -203,25 +207,34 @@ const Testimonial = () => {
             cursor: "grab",
             overflowX: "auto",
             overflowY: "hidden",
-
-            scrollbarWidth: "none",      // Firefox
-            msOverflowStyle: "none",     // IE/Edge old
-
+            scrollbarWidth: "none",
+            msOverflowStyle: "none",
             WebkitOverflowScrolling: "touch",
             touchAction: "pan-y",
             userSelect: "none",
           }}
         >
-          {cards.map((card) => (
-            <article
+          {cards.map((card, index) => (
+            <motion.article
               key={card.id}
               className={testimonialPageStyles.card}
+              initial={{ opacity: 0, y: 80 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.8,
+                delay: index * 0.15,
+                ease: [0.25, 1, 0.5, 1],
+              }}
+              viewport={{ once: true }}
+              whileHover={{ scale: 1.04, y: -8 }}
             >
               <div className={testimonialPageStyles.imageBlock}>
-                <img
+                <motion.img
                   src={card.img}
                   alt={card.title}
                   className={testimonialPageStyles.image}
+                  whileHover={{ scale: 1.1 }}
+                  transition={{ duration: 0.6 }}
                 />
               </div>
 
@@ -238,12 +251,12 @@ const Testimonial = () => {
                   {card.excerpt}
                 </p>
               </div>
-            </article>
+            </motion.article>
           ))}
         </div>
       </div>
 
-      {/* Hide scrollbar for Chrome / Safari */}
+      {/* Hide scrollbar */}
       <style>{`
         .${testimonialPageStyles.scroller}::-webkit-scrollbar {
           display: none;
