@@ -4,6 +4,7 @@ import Home from './pages/Home'
 import Brand from './pages/Brand'
 import LoginPage from './components/LoginPage'
 import SignUp from './components/SignUp'
+import Watch from './pages/Watch'
 
 const App = () => {
   return (
@@ -13,6 +14,7 @@ const App = () => {
         <Route path='/brands/:brandName' element={<Brand />} />
         <Route path='/login' element={<LoginPage />} />
         <Route path='/signup' element={<SignUp />} />
+        <Route path='/watches' element={<Watch />} />
       </Routes>
     </div>
   )
