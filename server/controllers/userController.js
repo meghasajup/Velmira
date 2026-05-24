@@ -88,8 +88,22 @@ export async function login(req, res) {
         });
 
         const token = jwt.sign({ id: _id.toString() }, JWT_SECRET, { expiresIn: TOKEN_EXPIRES_IN });
+        return res.status(200).json({
+            success: true,
+            message: "Login successfull!",
+            token,
+            user: {
+                id: user._id.toString(),
+                name: user.name,
+                email: user.email
+            }
+        });
 
     } catch (error) {
-
+        console.error("Login error:", err);
+        return res.status(500).json({
+            success: false,
+            message: "Server Error"
+        })
     }
 }
