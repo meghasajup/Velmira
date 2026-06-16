@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import User from "../models/userModel";
+import User from "../models/userModel.js";
 import validator from 'validator';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
@@ -56,7 +56,7 @@ export async function register(req, res) {
         })
 
     } catch (error) {
-        console.error("Register error:", err);
+        console.error("Register error:", error);
         return res.status(500).json({
             success: false,
             message: "Server Error"
@@ -64,33 +64,54 @@ export async function register(req, res) {
     }
 }
 
-//Login
+// Login
 export async function login(req, res) {
     try {
+        console.log("Inside login controller:", req.body);
+
+        if (!req.body) {
+            return res.status(400).json({
+                success: false,
+                message: "Request body is undefined"
+            });
+        }
+
         const { email, password } = req.body;
+
         if (!email || !password) {
             return res.status(400).json({
                 success: false,
-                message: "All field are required"
-            })
+                message: "All fields are required"
+            });
         }
 
         const user = await User.findOne({ email });
-        if (!user) return res.status(401).json({
-            success: false,
-            message: "Invalid email or password"
-        });
+
+        if (!user) {
+            return res.status(401).json({
+                success: false,
+                message: "Invalid email or password"
+            });
+        }
 
         const isMatch = await bcrypt.compare(password, user.password);
-        if (!isMatch) return res.status(401).json({
-            success: false,
-            message: "Invalid email or password"
-        });
 
-        const token = jwt.sign({ id: _id.toString() }, JWT_SECRET, { expiresIn: TOKEN_EXPIRES_IN });
+        if (!isMatch) {
+            return res.status(401).json({
+                success: false,
+                message: "Invalid email or password"
+            });
+        }
+
+        const token = jwt.sign(
+            { id: user._id.toString() },
+            JWT_SECRET,
+            { expiresIn: TOKEN_EXPIRES_IN }
+        );
+
         return res.status(200).json({
             success: true,
-            message: "Login successfull!",
+            message: "Login successful!",
             token,
             user: {
                 id: user._id.toString(),
@@ -100,10 +121,11 @@ export async function login(req, res) {
         });
 
     } catch (error) {
-        console.error("Login error:", err);
+        console.error("Login error:", error);
+
         return res.status(500).json({
             success: false,
             message: "Server Error"
-        })
+        });
     }
 }
